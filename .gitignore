@@ -1,3 +1,7 @@
+# Docs
+*.pdf
+*.log
+
 # Prerequisites
 *.d
 
