@@ -43,21 +43,15 @@ int main() {
             {
                 cout << "Input array with size: " << size << "\n";
                 vector<int> array = inputArray(size);
-                printArray(array);
 
                 cout << "\nResult select:\n";
                 printArray(sortSelect(array));
-                cout << "\n";
-                printArray(array);
                 cout << "\nResult bubble:\n";
                 printArray(sortBubble(array));
-                cout << "\n";
-                printArray(array);
                 cout << "\nResult insertion:\n";
                 printArray(sortInsertion(array));
-                cout << "\n";
-                printArray(array);
             }
+            break;
             
         case 2:
         {
@@ -110,6 +104,7 @@ int main() {
         }
         default:
             cout << "Cant find this point, try again\n";
+            break;
         }
     }
 }
