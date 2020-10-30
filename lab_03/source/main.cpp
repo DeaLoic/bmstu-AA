@@ -64,39 +64,47 @@ int main() {
                 QueryPerformanceFrequency(&frequency);
                 QueryPerformanceCounter(&startingTime);
 
-                answer = sortSelect(array);
+                for (int i = 0; i < 100; i++)
+                {
+                    answer = sortSelect(array);
+                }
 
                 QueryPerformanceCounter(&endingTime);
                 ellapsedMicrosecond.QuadPart = endingTime.QuadPart - startingTime.QuadPart;
                 ellapsedMicrosecond.QuadPart *= 1000000;
                 ellapsedMicrosecond.QuadPart /= frequency.QuadPart;
-                long double selectMS = ellapsedMicrosecond.QuadPart;
+                long double selectMS = ellapsedMicrosecond.QuadPart / 100;
 
                 // Bubble
                 QueryPerformanceFrequency(&frequency);
                 QueryPerformanceCounter(&startingTime);
 
-                answer = sortBubble(array);
-                
+                for (int i = 0; i < 100; i++)
+                {
+                    answer = sortBubble(array);
+                }
                 QueryPerformanceCounter(&endingTime);
                 ellapsedMicrosecond.QuadPart = endingTime.QuadPart - startingTime.QuadPart;
                 ellapsedMicrosecond.QuadPart *= 1000000;
                 ellapsedMicrosecond.QuadPart /= frequency.QuadPart;
 
-                long double bubbleMS = ellapsedMicrosecond.QuadPart;
+                long double bubbleMS = ellapsedMicrosecond.QuadPart / 100;
 
                 // Insertion
                 QueryPerformanceFrequency(&frequency);
                 QueryPerformanceCounter(&startingTime);
 
-                answer = sortInsertion(array);
+                for (int i = 0; i < 100; i++)
+                {
+                    answer = sortInsertion(array);
+                }
                 
                 QueryPerformanceCounter(&endingTime);
                 ellapsedMicrosecond.QuadPart = endingTime.QuadPart - startingTime.QuadPart;
                 ellapsedMicrosecond.QuadPart *= 1000000;
                 ellapsedMicrosecond.QuadPart /= frequency.QuadPart;
 
-                long double insertionMS = ellapsedMicrosecond.QuadPart;
+                long double insertionMS = ellapsedMicrosecond.QuadPart / 100;
 
                 cout << "\n Size: " << i << "\nBubble: " << bubbleMS << "     Select: " << selectMS << "       Insertion: " << insertionMS << "\n";
             }
