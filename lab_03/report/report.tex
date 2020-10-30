@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{GOST}
 \usepackage[T1, T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -7,9 +8,6 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
-\usepackage[left=2cm, right=2cm, top = 2cm, bottom = 2cm, bindingoffset=0cm]{geometry}
-\usepackage{indentfirst}
-\usepackage{graphicx}
 
 \usepackage{listings}
 % Для листинга кода:
@@ -52,7 +50,7 @@
 		\begin{enumerate}
 		\item сортировка пузырьком;
 		\item сортировка вставками;
-		\item сортировка выбором;
+		\item сортировка выбором.
 		\end{enumerate}
 	\newpage
 	\section{Аналитическая часть}
@@ -64,8 +62,8 @@
 			\newline 
 			\indent \textbf{Задачи работы:}
 			\begin{enumerate}
-				\item дать описание реализуемых сортировок;
-				\item реализовать построенные алгоритмы;
+				\item дать описание реализуемых алгоритмов сортировок;
+				\item реализовать описанные алгоритмы;
 				\item провести эксперименты по замеру времени работы разработанных алгоритмов;
 				\item провести сравнения алгоритмов по затраченному времени;
 				\item дать оценку трудоемкости алгоритмов.
@@ -133,14 +131,16 @@
 	int_{bubble}=\frac{(n-1)n}{2}
 \end{equation}
 	Тогда, если массив отсортирован в обратном порядке, происходит худший случай сортировки пузырьком \hyperref[worstBubble]{[\ref{worstBubble}]}:
-	\begin{equation}\label{worstBubble}
-		f_{bubble} = (3 + 1 + (2 + 1 + 2 + 1 + f_{swap})) * int_{bubble}) + (2 + 1 + 1)(n - 1) + 1 + 1 = 17 * int{bubble} + 4 * (n - 1) + 2 =
-		\frac{17 * (n-1)n}{2} + 4 * (n - 1) + 2 \thickapprox \frac{17n^2}{2}
-	\end{equation}
+	\\
+	$
+		f_{bubble} = (3 + 1 + (2 + 1 + 2 + 1 + f_{swap}))int_{bubble}) + (2 + 1 + 1)(n - 1)
+		 + 1 + 1 = 17int_{bubble} + 4(n - 1) + 2 = \newline
+		\frac{17(n-1)n}{2} + 4(n - 1) + 2 \thickapprox \frac{17n^2}{2}
+	$\begin{equation}\label{worstBubble}\end{equation}
 	А если массив отсортирован, происходит лучший случай \hyperref[bestBubble]{[\ref{bestBubble}]}:
 	\begin{equation}\label{bestBubble}
-		f_{bubble} = (3 + 1 + (2 + 1 + 1)) * int_{bubble}) + (2 + 1 + 1)(n - 1) + 1 + 1 = 8 * int{bubble} + 4 * (n - 1) + 2 =
-		= \frac{8 * (n-1)n}{2} + 4 * (n - 1) + 2 \thickapprox 4n^2
+		f_{bubble} = (3 + 1 + (2 + 1 + 1)) int_{bubble}) + (2 + 1 + 1)(n - 1) + 1 + 1 = 8 int_{bubble} + 4(n - 1) + 2 =
+		= \frac{8(n-1)n}{2} + 4(n - 1) + 2 \thickapprox 4n^2
 	\end{equation}
 	
 
@@ -150,7 +150,7 @@
 \end{equation}
 	Тогда, если массив отсортирован в обратном порядке, происходит худший случай \hyperref[worstChoose]{[\ref{worstChoose}]}:
 	\begin{equation}\label{worstChoose}
-		f_{choose} = ((2 + 4) * int{choose}) + (3 + 1 + f_{swap}) * (n - 1) + 2 =
+		f_{choose} = ((2 + 4) * int_{choose}) + (3 + 1 + f_{swap}) * (n - 1) + 2 =
 		 \frac{6 * (n-1)n}{2} + 11 * (n - 1) + 2 \thickapprox 3n^2
 	\end{equation}
 	А если массив отсортирован, происходит лучший случай \hyperref[bestChoose]{[\ref{bestChoose}]}:
@@ -167,7 +167,7 @@
 \end{equation}
 	Тогда, если массив отсортирован в обратном порядке, происходит худший случай \hyperref[worstInsert]{[\ref{worstInsert}]}:
 	\begin{equation}\label{worstInsert}
-		f_{insert} = ((5 + 5) * int{insert}) + (2 + 5) * (n - 1) + 2 =
+		f_{insert} = ((5 + 5) * int_{insert}) + (2 + 5) * (n - 1) + 2 =
 		 \frac{10 * (n-1)n}{2} + 7 * (n - 1) + 2 \thickapprox 5n^2
 	\end{equation}
 	А если массив отсортирован, происходит лучший случай \hyperref[bestInsert]{[\ref{bestInsert}]}:
@@ -263,7 +263,7 @@
 	\end{lstlisting}
 
 	\subsection{Вывод}
-	В данном разделе были описаны средства реализации, были представлены листинги реализации стандартного алгоритма сортировки массивов, обычного и оптимизированного алгоритма Винограда.
+	В данном разделе были описаны средства реализации, были представлены листинги реализации сотрировок пузырьком, вставками и выбором.
 
 	\newpage
 	\section{Экспериментальная часть}
