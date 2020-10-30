@@ -142,11 +142,87 @@ namespace lab_04
                 for (int i = 0; i < threadWork - 1; i++)
                 {
                     threads[i] = new Thread(CountMain);
-                    threads[i].Start(new ParametersForMain(ref result, first, second, mulV, mulH, start, start + step, m2, m1));
+                    threads[i].Start(new ParametersForMain(result, first, second, mulV, mulH, start, start + step, m2, m1));
                     start += step;
                 }
                 threads[threadWork - 1] = new Thread(CountMain);
-                threads[threadWork - 1].Start(new ParametersForMain(ref result, first, second, mulV, mulH, start, n1, m2, m1));
+                threads[threadWork - 1].Start(new ParametersForMain(result, first, second, mulV, mulH, start, n1, m2, m1));
+
+                // sync
+                for (int i = 0; i < threadWork; i++)
+                {
+                    threads[i].Join();
+                }
+
+                // end
+                if (m1 % 2 == 1)
+                {
+                    for (int i = 0; i < n1; i++)
+                    {
+                        for (int j = 0; j < m2; j++)
+                        {
+                            result[i, j] += first[i, m1 - 1] * second[m1 - 1, j];
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        // параллелится только main
+        public static Matrix ParallelSecond(Matrix first, Matrix second, int threadsCount)
+        {
+            Matrix result = new Matrix(0, 0);
+            if (threadsCount <= 1)
+            {
+                result = Classic(first, second);
+            }
+            else if (first.M == second.N && first.N != 0 && second.M != 0)
+            {
+                int n1 = first.N;
+                int m1 = first.M;
+                int n2 = second.N;
+                int m2 = second.M;
+
+                result = new Matrix(n1, m2);
+                int[] mulH = new int[n1];
+                int[] mulV = new int[m2];
+
+                for (int i = 0; i < n1; i++)
+                {
+                    for (int j = 0; j < m1 / 2; j++)
+                    {
+                        mulH[i] += first[i, j * 2] * first[i, j * 2 + 1];
+                    }
+                }
+
+                for (int i = 0; i < m2; i++)
+                {
+                    for (int j = 0; j < n2 / 2; j++)
+                    {
+                        mulV[i] += second[j * 2, i] * second[j * 2 + 1, i];
+                    }
+                }
+
+                //Main
+                Thread[] threads = new Thread[threadsCount];
+                int step = n1 / threadsCount;
+                int threadWork = threadsCount;
+                if (threadsCount / n1 >= 1)
+                {
+                    step = 1;
+                    threadWork = n1;
+                }
+                int start = 0;
+                for (int i = 0; i < threadWork - 1; i++)
+                {
+                    threads[i] = new Thread(CountMain);
+                    threads[i].Start(new ParametersForMain(result, first, second, mulV, mulH, start, start + step, m2, m1));
+                    start += step;
+                }
+                threads[threadWork - 1] = new Thread(CountMain);
+                threads[threadWork - 1].Start(new ParametersForMain(result, first, second, mulV, mulH, start, n1, m2, m1));
 
                 // sync
                 for (int i = 0; i < threadWork; i++)
@@ -255,7 +331,7 @@ namespace lab_04
         public int[] mulH, mulV;
         public int start, end, m2, m1;
 
-        public ParametersForMain(ref Matrix first, Matrix second, Matrix result,
+        public ParametersForMain(Matrix result, Matrix first, Matrix second,
                                  int[] mulV, int[] mulH,
                                  int start, int end, int m2, int m1)
         {
