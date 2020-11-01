@@ -1,38 +1,76 @@
 import matplotlib.pyplot as plt
 
+test1 = "./testClassicFix.txt"
+test2 = "./testParallelFirstFix.txt"
+test3 = "./testParallelSecondFix.txt"
 
-x1 = [2, 52, 102, 152, 202, 252]
-x2 = [302, 352, 402, 452, 502]
+test4 = "./testClassicMulty.txt"
+test5 = "./testParallelFirstMulty.txt"
+test6 = "./testParallelSecondMulty.txt"
 
-y11 = [1, 22, 69, 161, 287, 410]
-y12 = [1, 15, 44, 103, 159, 229]
-y13 = [1, 9, 26, 51, 104, 131]
+x1 = []
+y1 = []
+y2 = []
+y3 = []
 
-y21 = [623, 886, 1254, 1557, 1715]
-y22 = [326, 453, 554, 704, 887]
-y23 = [212, 279, 366, 466, 583]
+with open(test1, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        x1.append(line[0])
+        y1.append(line[1])
+
+with open(test2, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        y2.append(line[1])
+
+with open(test3, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        y3.append(line[1])
+
+x2 = []
+y4 = []
+y5 = []
+y6 = []
+
+with open(test4, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        x2.append(line[0])
+        y4.append(line[1])
+
+with open(test5, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        y5.append(line[1])
+
+with open(test6, mode="r") as f:
+    for line in f:
+        line = list(map(int, line.strip().split()))
+        y6.append(line[1])
 
 fig = plt.figure()
 
-label1 = "Пузырек"
-label2 = "Выбор"
-label3 = "Вставки"
-
-plt.plot(x1, y11, color="red", label=label1)
-plt.plot(x1, y12, color="blue", label=label2)
-plt.plot(x1, y13, color="yellow", label=label3)
+label1 = "Последовательный"
+label2 = "Параллельный 1"
+label3 = "Параллельный 2"
 
 '''
-plt.plot(x2, y21, color="red", label=label1)
-plt.plot(x2, y22, color="blue", label=label2)
-plt.plot(x2, y23, color="yellow", label=label3)
+plt.plot(x1, y1, color="red", label=label1)
+plt.plot(x1, y2, color="blue", label=label2)
+plt.plot(x1, y3, color="yellow", label=label3)
+
 '''
+plt.plot(x2, y4, color="red", label=label1)
+plt.plot(x2, y5, color="blue", label=label2)
+plt.plot(x2, y6, color="yellow", label=label3)
 
 plt.legend()
 
 plt.title("Результаты эксперимента")
-plt.xlabel("Размер массива")
-plt.ylabel("Микросекунды")
+plt.xlabel("Число потоков")
+plt.ylabel("Миллисекунды")
 plt.grid(True)
 
 plt.show()
