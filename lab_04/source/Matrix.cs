@@ -51,14 +51,15 @@ namespace lab_04
             }
         }
 
-        public void Random()
+        public void Random(int range = 100)
         {
             Random random = new Random();
+            range = range >= 0 ? range : 100;
             for (int i = 0; i < n; i++)
             {
                 for (int j = 0; j < m; j++)
                 {
-                    body[i, j] = random.Next(100);
+                    body[i, j] = random.Next(range * 2) - range;
                 }
             }
         }

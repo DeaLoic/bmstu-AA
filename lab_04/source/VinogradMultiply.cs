@@ -7,62 +7,62 @@ namespace lab_04
 {
     static class VinogradMultiply
     {
-        public static Matrix Classic(Matrix first, Matrix second)
-        {
-            Matrix result = new Matrix(0, 0);
-            if (first.M == second.N && first.N != 0 && second.M != 0)
+            public static Matrix Classic(Matrix first, Matrix second)
             {
-                int n1 = first.N;
-                int m1 = first.M;
-                int n2 = second.N;
-                int m2 = second.M;
-
-                result = new Matrix(n1, m2);
-                int[] mulH = new int[n1];
-                int[] mulV = new int[m2];
-
-                for (int i = 0; i < n1; i++)
+                Matrix result = new Matrix(0, 0);
+                if (first.M == second.N && first.N != 0 && second.M != 0)
                 {
-                    for (int j = 0; j < m1 / 2; j++)
-                    {
-                        mulH[i] += first[i, j * 2] * first[i, j * 2 + 1];
-                    }
-                }
+                    int n1 = first.N;
+                    int m1 = first.M;
+                    int n2 = second.N;
+                    int m2 = second.M;
 
-                for (int i = 0; i < m2; i++)
-                {
-                    for (int j = 0; j < n2 / 2; j++)
-                    {
-                        mulV[i] += second[j * 2, i] * second[j * 2 + 1, i];
-                    }
-                }
+                    result = new Matrix(n1, m2);
+                    int[] mulH = new int[n1];
+                    int[] mulV = new int[m2];
 
-                for (int i = 0; i < n1; i++)
-                {
-                    for (int j = 0; j < m2; j++)
+                    for (int i = 0; i < n1; i++)
                     {
-                        result[i, j] = -mulH[i] - mulV[j];
-                        for (int k = 0; k < m1 / 2; k++)
+                        for (int j = 0; j < m1 / 2; j++)
                         {
-                            result[i, j] += (first[i, 2 * k + 1] + second[2 * k, j]) * (first[i, 2 * k] + second[2 * k + 1, j]);
+                            mulH[i] += first[i, j * 2] * first[i, j * 2 + 1];
                         }
                     }
-                }
 
-                if (m1 % 2 == 1)
-                {
+                    for (int i = 0; i < m2; i++)
+                    {
+                        for (int j = 0; j < n2 / 2; j++)
+                        {
+                            mulV[i] += second[j * 2, i] * second[j * 2 + 1, i];
+                        }
+                    }
+
                     for (int i = 0; i < n1; i++)
                     {
                         for (int j = 0; j < m2; j++)
                         {
-                            result[i, j] += first[i, m1 - 1] * second[m1 - 1, j];
+                            result[i, j] = -mulH[i] - mulV[j];
+                            for (int k = 0; k < m1 / 2; k++)
+                            {
+                                result[i, j] += (first[i, 2 * k + 1] + second[2 * k, j]) * (first[i, 2 * k] + second[2 * k + 1, j]);
+                            }
+                        }
+                    }
+
+                    if (m1 % 2 == 1)
+                    {
+                        for (int i = 0; i < n1; i++)
+                        {
+                            for (int j = 0; j < m2; j++)
+                            {
+                                result[i, j] += first[i, m1 - 1] * second[m1 - 1, j];
+                            }
                         }
                     }
                 }
-            }
 
-            return result;
-        }
+                return result;
+            }
 
         // параллелится и mulh и mulv одновременно, потом паралл на главную и параллел на последнюю
         public static Matrix ParallelFirst(Matrix first, Matrix second, int threadsCount)
@@ -157,12 +157,20 @@ namespace lab_04
                 // end
                 if (m1 % 2 == 1)
                 {
-                    for (int i = 0; i < n1; i++)
+                    start = 0;
+                    for (int i = 0; i < threadWork - 1; i++)
                     {
-                        for (int j = 0; j < m2; j++)
-                        {
-                            result[i, j] += first[i, m1 - 1] * second[m1 - 1, j];
-                        }
+                        threads[i] = new Thread(CountTail);
+                        threads[i].Start(new ParametersForMain(result, first, second, mulV, mulH, start, start + step, m2, m1));
+                        start += step;
+                    }
+                    threads[threadWork - 1] = new Thread(CountTail);
+                    threads[threadWork - 1].Start(new ParametersForMain(result, first, second, mulV, mulH, start, n1, m2, m1));
+
+                    // sync
+                    for (int i = 0; i < threadWork; i++)
+                    {
+                        threads[i].Join();
                     }
                 }
             }
@@ -304,6 +312,26 @@ namespace lab_04
                     {
                         result[i, j] += (first[i, 2 * k + 1] + second[2 * k, j]) * (first[i, 2 * k] + second[2 * k + 1, j]);
                     }
+                }
+            }
+        }
+
+        private static void CountTail(object paramsObj)
+        {
+            ParametersForMain paramses = (ParametersForMain)paramsObj;
+            Matrix result = paramses.result,
+                first = paramses.first,
+                second = paramses.second;
+            int start = paramses.start,
+                end = paramses.end,
+                m2 = paramses.m2,
+                m1 = paramses.m1;
+
+            for (int i = start; i < end; i++)
+            {
+                for (int j = 0; j < m2; j++)
+                {
+                    result[i, j] += first[i, m1 - 1] * second[m1 - 1, j];
                 }
             }
         }
