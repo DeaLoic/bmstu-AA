@@ -11,11 +11,12 @@ import (
 const MAX_ELEMENT = 100
 
 var wg sync.WaitGroup
+var log []string
 
 type SetTimestamp func(*queue.Element, int64)
 
 func pingPlace(id int, message string, time int64) {
-	fmt.Printf("%d     %s    %d\n", id, message, time)
+	log = append(log, fmt.Sprintf("%d     %s    %d\n", id, message, time))
 }
 
 func doStuff() {
@@ -76,8 +77,7 @@ func main() {
 
 	wg.Wait()
 
-	for i := 0; i < MAX_ELEMENT; i++ {
-		element := answerQueue.Pop()
-		fmt.Println(element.ID, element.TimestampAnswer)
+	for i := 0; i < len(log); i++ {
+		fmt.Println(log[i])
 	}
 }
